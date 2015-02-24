@@ -29,16 +29,25 @@
 	var start = true;
 	socket.on('message', function (data) {
 		document.getElementById('status').textContent = data.cmd;
-		if(data.cmd == 'start'){
-			player.start();
-		}else if(data.cmd == 'stop'){
+		kinda_ntp.resync();
+		console.log('Time received : ' + kinda_ntp.time());
+		var ival = setInterval(function(){
+			var st = kinda_ntp.time();
+			if(st>=data.time){ 
+				if(data.cmd == 'start')player.start();
+				console.log('Time executed : ' + st);
+				console.log('Time diff : ' + (parseInt(st) - parseInt(data.time))  + ' ms')
+				clearInterval(ival);
+			}
+		},1);
+		
+		if(data.cmd == 'stop'){
 			player.stop();
 		}else if(data.cmd == 'resume'){
 			player.resume();
 		}else if(data.cmd == 'pause'){
 			player.pause();
 		}
-		
 		console.log(data);
 		/*
 		if(start){

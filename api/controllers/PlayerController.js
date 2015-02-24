@@ -13,6 +13,10 @@ module.exports = {
    * `PlayerController.start()`
    */
   start: function (req, res) {
+	var time = (new Date()).getTime() + 5000;
+	var data = {cmd:'start',time:time};
+	console.log(data);
+	sails.sockets.blast(data);
     return res.json({
       todo: 'start() is not implemented yet!'
     });
@@ -23,6 +27,7 @@ module.exports = {
    * `PlayerController.stop()`
    */
   stop: function (req, res) {
+	sails.sockets.blast({cmd:'stop'});
     return res.json({
       todo: 'stop() is not implemented yet!'
     });
@@ -33,6 +38,7 @@ module.exports = {
    * `PlayerController.pause()`
    */
   pause: function (req, res) {
+	sails.sockets.blast({cmd:'pause'});
     return res.json({
       todo: 'pause() is not implemented yet!'
     });
@@ -43,6 +49,7 @@ module.exports = {
    * `PlayerController.resume()`
    */
   resume: function (req, res) {
+	sails.sockets.blast({cmd:'resume'});
     return res.json({
       todo: 'resume() is not implemented yet!'
     });
