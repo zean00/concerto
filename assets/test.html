@@ -19,28 +19,94 @@
  <script src="js/Base64.js" type="text/javascript"></script>
  <script src="js/base64binary.js" type="text/javascript"></script>
  <script>
+	// requestAnimationFrame() shim by Paul Irish
+	// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+	window.requestAnimFrame = (function() {
+		return  window.requestAnimationFrame       || 
+				window.webkitRequestAnimationFrame || 
+				window.mozRequestAnimationFrame    || 
+				window.oRequestAnimationFrame      || 
+				window.msRequestAnimationFrame   ;
+	})();
+	
+	window.clearRequestInterval = function(handle) {
+		window.cancelAnimationFrame ? window.cancelAnimationFrame(handle) :
+		window.webkitCancelAnimationFrame ? window.webkitCancelAnimationFrame(handle) :
+		window.webkitCancelRequestAnimationFrame ? window.webkitCancelRequestAnimationFrame(handle) : /* Support for legacy API */
+		window.mozCancelRequestAnimationFrame ? window.mozCancelRequestAnimationFrame(handle) :
+		window.oCancelRequestAnimationFrame	? window.oCancelRequestAnimationFrame(handle) :
+		window.msCancelRequestAnimationFrame(handle);
+	};
+	
+	
 	io.sails.url = "http://localhost:1337";
 	var socket = io.connect();
 	kinda_ntp.init(socket);
-  
+	
 	// Calculated server local time. 
 	var time = kinda_ntp.time();
 	var player;
 	var start = true;
+	var display;
 	socket.on('message', function (data) {
-		document.getElementById('status').textContent = data.cmd;
+		time = kinda_ntp.time();
 		kinda_ntp.resync();
-		console.log('Time received : ' + kinda_ntp.time());
+		var sync = kinda_ntp.time();
+		var st;
+		if(data.cmd=='start'){
+			for(var i=0;;i++){
+				st = kinda_ntp.time();
+				if(st>=data.time){
+					player.start();
+					display = 'time arrived : ' + time + ' \n, after sync : ' + sync + '\n'
+					display += 'time executed : ' + st + '\n, time scheduled : ' + data.time + '\n, time diff : ' + (parseInt(st) - parseInt(data.time))  + ' ms';
+					display += '\n, counter : ' + i;
+					console.log('Time executed : ' + st);
+					console.log('time scheduled : ' + data.time);
+					console.log('Time diff : ' + (parseInt(st) - parseInt(data.time))  + ' ms')
+					console.log('Iteration : '  + i);
+					break;
+				}
+			}
+		}
+		/*
+		var handle = requestAnimFrame(loop);
+		loop();
+		function loop() {
+			console.log(handle);
+			st = kinda_ntp.time();
+			console.log(st);
+			if(st>=data.time){ 
+				if(data.cmd == 'start')player.start();
+				display = 'time executed : ' + st;
+				display += ', time scheduled : ' + data.time;
+				display += ', time diff : ' + (parseInt(st) - parseInt(data.time))  + ' ms';
+				console.log('Time executed : ' + st);
+				console.log('time scheduled : ' + data.time);
+				console.log('Time diff : ' + (parseInt(st) - parseInt(data.time))  + ' ms')
+				clearRequestInterval(handle);
+			}else{
+				requestAnimFrame(loop);
+			}
+		};
+		*/
+		//loop();
+		/*
 		var ival = setInterval(function(){
 			var st = kinda_ntp.time();
 			if(st>=data.time){ 
 				if(data.cmd == 'start')player.start();
-				console.log('Time executed : ' + st);
-				console.log('Time diff : ' + (parseInt(st) - parseInt(data.time))  + ' ms')
+				display = 'time executed : ' + st;
+				display += ', time scheduled : ' + data.time;
+				display += ', time diff : ' + (parseInt(st) - parseInt(data.time))  + ' ms';
+				//console.log('Time executed : ' + st);
+				//console.log('Time diff : ' + (parseInt(st) - parseInt(data.time))  + ' ms')
 				clearInterval(ival);
 			}
 		},1);
-		
+		*/
+		document.getElementById('status').textContent = display;
+		//console.log('Time received : ' + kinda_ntp.time());
 		if(data.cmd == 'stop'){
 			player.stop();
 		}else if(data.cmd == 'resume'){

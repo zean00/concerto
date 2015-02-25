@@ -13,7 +13,7 @@ module.exports = {
    * `PlayerController.start()`
    */
   start: function (req, res) {
-	var time = (new Date()).getTime() + 5000;
+	var time = (new Date()).getTime() + 3000;
 	var data = {cmd:'start',time:time};
 	console.log(data);
 	sails.sockets.blast(data);
