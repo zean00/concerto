@@ -14,10 +14,17 @@ module.exports.bootstrap = function(cb) {
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
 	var kinda_ntp = require('socket-kinda-ntp');
- 
+
+	sails.concerto = {};
 	sails.io.sockets.on('connection', function (socket) {
 	  kinda_ntp.init(socket);
 	});
 	sails.ntp = kinda_ntp;
+	sails.concerto.noIns = 5;
+	sails.concerto.state = 'stop';
+	sails.concerto.counter = 1;
+	sails.concerto.clientlist = {};
+	sails.concerto.insCounter = {};
+	sails.concerto.ins = {};
 	cb();
 };
