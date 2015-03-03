@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+ <title>Concerto</title>
+ <!-- midi.js css -->
+ <script src="js/jquery.min.js" type="text/javascript"></script>
+ <script>
+
+  function execute(cmd,id){
+      var url = '/player/' + cmd;
+      if(id)url +='/'+id;
+      $.get(url,function(data){
+        console.log(data);
+        document.getElementById('status').textContent = cmd + ' , id : ' + id;
+      });
+  }
+
+ </script>
+</head>
+<body>
+
+<div style="margin-bottom: 0px; border: 0px solid #000; background: rgba(255,255,255,0.5); border-radius: 10px; float: left; width: 200px; padding-bottom: 0px; position: relative; z-index: 2;">
+	<div id="status"></div>
+	<div id="songNo"></div>
+	<button onclick="execute('start');">Start</button>
+  <button onclick="execute('stop');">Stop</button>
+  <button onclick="execute('pause');">Pause</button>
+  <button onclick="execute('resume');">Resume</button>
+  <button onclick="execute('mute');">Mute All</button>
+  <button onclick="execute('unmute');">Unmute All</button>
+  <button onclick="execute('mute',1);">Mute 1</button>
+  <button onclick="execute('mute',2);">Mute 2</button>
+  <button onclick="execute('mute',3);">Mute 3</button>
+  <button onclick="execute('mute',4);">Mute 4</button>
+  <button onclick="execute('mute',5);">Mute 5</button>
+  <button onclick="execute('mute',6);">Mute 6</button>
+  <button onclick="execute('mute',0);">Mute master</button>
+  <button onclick="execute('unmute',1);">Unmute 1</button>
+  <button onclick="execute('unmute',2);">Unmute 2</button>
+  <button onclick="execute('unmute',3);">Unmute 3</button>
+  <button onclick="execute('unmute',4);">Unmute 4</button>
+  <button onclick="execute('unmute',5);">Unmute 5</button>
+  <button onclick="execute('unmute',6);">Unmute 6</button>
+  <button onclick="execute('unmute',0);">Unmute master</button>
+  <button onclick="execute('solo',1);">Solo 1</button>
+  <button onclick="execute('solo',2);">Solo 2</button>
+  <button onclick="execute('solo',3);">Solo 3</button>
+  <button onclick="execute('solo',4);">Solo 4</button>
+  <button onclick="execute('solo',5);">Solo 5</button>
+  <button onclick="execute('solo',6);">Solo 6</button>
+</div>
+</body>
+</html>

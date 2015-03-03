@@ -71,21 +71,24 @@ module.exports = {
 		var client = req.ip;
 		console.log(client);
 		var data = {};
-		if(sails.concerto.clientlist[client]!=undefined)
-			data.insNo = sails.concerto.clientlist[client];
-		else{
-			data.insNo = sails.concerto.counter;
-			if(sails.concerto.counter==5)
-				sails.concerto.counter = 1;
-			else
-				sails.concerto.counter++;
+    if(client=='127.0.0.1'||req.params.id=='master'){
+        data.insNo = 0;
+    }else{
+  		if(sails.concerto.clientlist[client]!=undefined)
+  			data.insNo = sails.concerto.clientlist[client];
+  		else{
+  			data.insNo = sails.concerto.counter;
+  			if(sails.concerto.counter==5)
+  				sails.concerto.counter = 1;
+  			else
+  				sails.concerto.counter++;
 
-			sails.concerto.clientlist[client] = data.insNo;
-			if(sails.concerto.insCounter[data.insNo]==undefined)
-				sails.concerto.insCounter[data.insNo] = 0;
-			sails.concerto.insCounter[data.insNo]++;
-		}
-
+  			sails.concerto.clientlist[client] = data.insNo;
+  			if(sails.concerto.insCounter[data.insNo]==undefined)
+  				sails.concerto.insCounter[data.insNo] = 0;
+  			sails.concerto.insCounter[data.insNo]++;
+  		}
+    }
 		if(sails.concerto.state=='play'){
 			data.action = 'play';
 			data.playTime = sails.concerto.playTime;

@@ -20,7 +20,7 @@ module.exports.bootstrap = function(cb) {
 	  kinda_ntp.init(socket);
 	});
 	sails.ntp = kinda_ntp;
-	sails.concerto.noIns = 5;
+	sails.concerto.noIns = 6;
 	sails.concerto.state = 'stop';
 	sails.concerto.counter = 1;
 	sails.concerto.clientlist = {};
